@@ -1,5 +1,6 @@
 en:
   vagrant_proxmox:
+    adjust_forwarded_port_params: 'Logging in via SSH'
     already_running: 'The virtual machine is already up and running'
     already_stopped: "The virtual machine is already stopped"
     creating_vm: 'Creating the virtual machine...'
