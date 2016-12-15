@@ -68,7 +68,7 @@ will be created. However, the instructions can be easily modified to work with d
    It should be noted that Proxmox has a well-defined [naming convention](https://pve.proxmox.com/wiki/Template_naming_convention) for OpenVZ templates,
    as such as we save the OpenVZ template using this convention (i.e. `centos-7-minimal_7.0_amd64.tar.gz`).
 
-        $ curl -O https://download.openvz.org/template/precreated/centos-7-x86_64-minimal.tar.gz -o centos-7-minimal_7.0_amd64.tar.gz
+        $ curl https://download.openvz.org/template/precreated/centos-7-x86_64-minimal.tar.gz -o centos-7-minimal_7.0_amd64.tar.gz
        
 2. Log into the Proxmox web GUI and upload the template.
 
