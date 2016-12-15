@@ -16,7 +16,7 @@ has the following goals:
 * Clarify that this project only works with Proxmox 3.x. In the author's experience, this plugin is not compatible with
   Proxmox 4.x APIs.
 * Fix a bug in the OpenVZ implementation to allow Vagrant to SSH directly into the OpenVZ containers.
-* Provided detailed instructions on configuring Proxmox to use a custom Vagrant-compatible CentOS 7 OpenVZ container.
+* Provide detailed instructions on configuring Proxmox to use a custom Vagrant-compatible CentOS 7 OpenVZ container.
 
 ## Requirements
 
@@ -59,7 +59,7 @@ The author's local development environment is an OS X workstation. If you are on
   `$ rake build && vagrant plugin uninstall vagrant-proxmox && vagrant plugin install pkg/vagrant-proxmox-0.0.10.gem`
         
 
-## Upload a base OpenVZ Template
+## Upload a Base OpenVZ Template
 
 Next, we need to create an OpenVZ template that has minimal support for Vagrant. As an example, a CentOS 7 template
 will be created. However, the instructions can be easily modified to work with different OpenVZ templates.
@@ -78,9 +78,9 @@ will be created. However, the instructions can be easily modified to work with d
 Optionally, create a Vagrant user that the plugin can use to manage VMs. Using root is not recommended.
 
 Promox supports multiple [authentication realms](https://pve.proxmox.com/wiki/User_Management#pveum_authentication_realms)—namely, 
-PAM for logging in using Linux system accounts and Proxmox VE Authentication Server. We will use the latter.
+PAM and Proxmox VE Authentication Server. We will use the latter.
 
-1. Log into the Proxmox server as root via SSH or console.
+1. Log into the Proxmox server as root via SSH or the console.
 
 2. Create a vagrant group.
  
@@ -101,11 +101,11 @@ PAM for logging in using Linux system accounts and Proxmox VE Authentication Ser
 
 2. Start the VM and log in.
 
-3. Update CentOS 7 to ensure weh have the latest patches for OS and binaries.
+3. Update CentOS 7 to ensure we have the latest patches for the OS and binaries.
 
         # yum update -y
         
-4. Install basic networking utilities, rsync and sudo.You can add other packages based on your base CentOS 7 needs.
+4. Install basic networking utilities, rsync and sudo. You can add other packages based on your base CentOS 7 needs.
 
         # yum install -y net-tools rsync sudo
         
@@ -123,14 +123,14 @@ PAM for logging in using Linux system accounts and Proxmox VE Authentication Ser
    https://github.com/mitchellh/vagrant/tree/master/keys. This key pair is insecure as everyone in the world has 
    access to the private key. As such, we will generate a new SSH key pair on our local workstation.
    
-        $ mkdir ~/vargrant-keys
-        $ chmod 700 ~/vargrant-keys
-        $ ssh-keygen -t rsa -C "Vagrant SSH key pair" -f ~/vargrant-keys/vagrant -N ""
+        $ mkdir ~/vagrant-keys
+        $ chmod 700 ~/vagrant-keys
+        $ ssh-keygen -t rsa -C "Vagrant SSH key pair" -f ~/vagrant-keys/vagrant -N ""
    
 8. From your local workstation run the following to set up the SSH public key on the VM.
 
          $ ssh root@YourVmIpAdddress 'mkdir /home/vagrant/.ssh'
-         $ scp ~/vargrant-keys/vagrant.pub root@YourVmIpAdddress:/home/vagrant/.ssh/authorized_keys
+         $ scp ~/vagrant-keys/vagrant.pub root@YourVmIpAdddress:/home/vagrant/.ssh/authorized_keys
          $ ssh root@YourVmIpAdddress 'chmod 700 /home/vagrant/.ssh'
          $ ssh root@YourVmIpAdddress 'chmod 600 /home/vagrant/.ssh/authorized_keys'
          $ ssh root@YourVmIpAdddress 'chown -R vagrant:vagrant /home/vagrant/.ssh'
@@ -138,7 +138,7 @@ PAM for logging in using Linux system accounts and Proxmox VE Authentication Ser
 
 9. From your workstation, test your key and ensure that you can log in without a password. Then, test switching to root without a password.
 
-         $ ssh -i ~/vargrant-keys/vagrant vagrant@YourVmIpAdddress
+         $ ssh -i ~/vagrant-keys/vagrant vagrant@YourVmIpAdddress
          [vagrant@centos7-base ~]$ sudo su
          [root@centos7-base vagrant]#
          
@@ -150,7 +150,7 @@ PAM for logging in using Linux system accounts and Proxmox VE Authentication Ser
          
 11. Log into the Proxmox web GUI and shutdown the VM and then remove the network interface from the _Network_ tab.
 
-12. Log into the Proxmox server via SSH and navigate to the OpenVZ node location (/var/lib/vz/private/<node ID>) for 
+12. Log into the Proxmox server via SSH and navigate to the OpenVZ node location (`/var/lib/vz/private/<node ID>`) for 
     the newly created CentOS 7 container. In my case the node ID was _100_.
     
          # cd /var/lib/vz/private/100
@@ -165,14 +165,14 @@ PAM for logging in using Linux system accounts and Proxmox VE Authentication Ser
 
 1. On your local workstation, create a `Vagrantfile`. Simply change:
 
-   * `config.ssh.private_key_path` - This should point ito the private key on your local workstation that was created earlier.
+   * `config.ssh.private_key_path` - This should point to the private key on your local workstation that was created earlier.
    * `proxmox.endpoint` - This should be updated with the IP or hostname of your Proxmox server.
    * `box.vm.network :public_network, ip:` This should be set to the IP address that you wish to assign to your new VM.
 
 ```
 Vagrant.configure('2') do |config|
 
-    config.ssh.private_key_path = '/Users/gaston/vargrant-keys/vagrant'
+    config.ssh.private_key_path = '/Users/gaston/vagrant-keys/vagrant'
     config.ssh.port = 22
 
     config.vm.provider :proxmox do |proxmox|
