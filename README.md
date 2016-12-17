@@ -40,10 +40,11 @@ The author's local development environment is an OS X workstation. If you are on
 
 3. Clone this project and build the plugin.
 
-        $ git checkout https://github.com/GastonGonzalez/vagrant-proxmox.git
+        $ git clone https://github.com/GastonGonzalez/vagrant-proxmox.git
         $ cd vagrant-proxmox
         $ gem install bundler
         $ bundle install
+        $ rake build
 
 4. Uninstall the `vagrant-proxmox` plugin if exists and install the plugin locally.
 
@@ -53,11 +54,35 @@ The author's local development environment is an OS X workstation. If you are on
 
 5. Add the dummy Vagrant box for this provider.
    
-        $ vagrant box add dummy vagrant-proxmox/dummy_box/dummy.box
+        $ vagrant box add dummy dummy_box/dummy.box
 
 > Note: For ongoing development, run the following to rebuild and reinstall the plugin.
   `$ rake build && vagrant plugin uninstall vagrant-proxmox && vagrant plugin install pkg/vagrant-proxmox-0.0.10.gem`
         
+## Building and Installing the Plugin (Windows)
+
+1. Download and install Vagrant. For testing, version 1.8.1 was used.
+
+2. Download and install [RubyInstaller for Windows](https://rubyinstaller.org/downloads/). For testing, RubyInstaller version 2.3.3 was used. Do not use the x64 version. On the _Optional Tasks_ section, check all the checkboxes.
+
+3. Clone this project and build the plugin.
+
+        $ git clone https://github.com/GastonGonzalez/vagrant-proxmox.git
+        $ cd vagrant-proxmox
+        $ gem install bundler
+        $ bundle install
+        $ rake build
+
+4. Uninstall the `vagrant-proxmox` plugin if exists and install the plugin locally.
+
+        $ vagrant plugin uninstall vagrant-proxmox
+        $ vagrant plugin install pkg/vagrant-proxmox-0.0.10.gem
+        $ vagrant plugin list
+
+5. Add the dummy Vagrant box for this provider.
+   
+        $ vagrant box add dummy dummy_box/dummy.box
+
 
 ## Upload a Base OpenVZ Template
 
