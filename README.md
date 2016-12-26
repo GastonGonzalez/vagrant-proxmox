@@ -59,30 +59,6 @@ The author's local development environment is an OS X workstation. If you are on
 > Note: For ongoing development, run the following to rebuild and reinstall the plugin.
   `$ rake build && vagrant plugin uninstall vagrant-proxmox && vagrant plugin install pkg/vagrant-proxmox-0.0.10.gem`
         
-## Building and Installing the Plugin (Windows)
-
-1. Download and install Vagrant. For testing, version 1.8.1 was used.
-
-2. Download and install [RubyInstaller for Windows](https://rubyinstaller.org/downloads/). For testing, RubyInstaller version 2.3.3 was used. Do not use the x64 version. On the _Optional Tasks_ section, check all the checkboxes.
-
-3. Clone this project and build the plugin.
-
-        $ git clone https://github.com/GastonGonzalez/vagrant-proxmox.git
-        $ cd vagrant-proxmox
-        $ gem install bundler
-        $ bundle install
-        $ rake build
-
-4. Uninstall the `vagrant-proxmox` plugin if exists and install the plugin locally.
-
-        $ vagrant plugin uninstall vagrant-proxmox
-        $ vagrant plugin install pkg/vagrant-proxmox-0.0.10.gem
-        $ vagrant plugin list
-
-5. Add the dummy Vagrant box for this provider.
-   
-        $ vagrant box add dummy dummy_box/dummy.box
-
 
 ## Upload a Base OpenVZ Template
 
@@ -190,7 +166,8 @@ PAM and Proxmox VE Authentication Server. We will use the latter.
 
 1. On your local workstation, create a `Vagrantfile`. Simply change:
 
-   * `config.ssh.private_key_path` - This should point to the private key on your local workstation that was created earlier.
+   * `config.ssh.private_key_path` - This should point to the private key on your local workstation that was created earlier. If 
+      you are on Windows adjust the path (i.e., C:\Users\gaston\vagrant-keys\vagrant).
    * `proxmox.endpoint` - This should be updated with the IP or hostname of your Proxmox server.
    * `box.vm.network :public_network, ip:` This should be set to the IP address that you wish to assign to your new VM.
 
@@ -199,6 +176,7 @@ Vagrant.configure('2') do |config|
 
     config.ssh.private_key_path = '/Users/gaston/vagrant-keys/vagrant'
     config.ssh.port = 22
+    config.vm.hostname = 'centos7'
 
     config.vm.provider :proxmox do |proxmox|
         proxmox.endpoint = 'https://192.168.5.110:8006/api2/json'
