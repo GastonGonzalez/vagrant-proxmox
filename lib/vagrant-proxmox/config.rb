@@ -108,11 +108,6 @@ module VagrantPlugins
 			# @return [Integer]
 			attr_accessor :qemu_sockets
 
-			# The qemu template to clone for the virtual machine
-			#
-			# @return [String]
-			attr_accessor :qemu_template
-
 			# The qemu iso file to use for the virtual machine
 			#
 			# @return [String]
@@ -173,7 +168,6 @@ module VagrantPlugins
 				@qemu_os = UNSET_VALUE
 				@qemu_cores = 1
 				@qemu_sockets = 1
-				@qemu_template = UNSET_VALUE
 				@qemu_iso = UNSET_VALUE
 				@qemu_iso_file = UNSET_VALUE
 				@replace_qemu_iso_file = false
@@ -193,7 +187,6 @@ module VagrantPlugins
 				@openvz_template_file = nil if @openvz_template_file == UNSET_VALUE
 				@openvz_os_template = "local:vztmpl/#{File.basename @openvz_template_file}" if @openvz_template_file
 				@openvz_os_template = nil if @openvz_os_template == UNSET_VALUE
-				@qemu_template = nil if @qemu_os == UNSET_VALUE
 				@qemu_os = nil if @qemu_os == UNSET_VALUE
 				@qemu_iso_file = nil if @qemu_iso_file == UNSET_VALUE
 				@qemu_iso = "local:iso/#{File.basename @qemu_iso_file}" if @qemu_iso_file
@@ -213,12 +206,9 @@ module VagrantPlugins
 					errors << I18n.t('vagrant_proxmox.errors.no_openvz_os_template_or_openvz_template_file_specified_for_type_openvz') unless @openvz_os_template || @openvz_template_file
 				end
 				if @vm_type == :qemu
-					if @qemu_template
-					else
-						errors << I18n.t('vagrant_proxmox.errors.no_qemu_os_specified_for_vm_type_qemu') unless @qemu_os
-						errors << I18n.t('vagrant_proxmox.errors.no_qemu_iso_or_qemu_iso_file_specified_for_vm_type_qemu') unless @qemu_iso || @qemu_iso_file
-						errors << I18n.t('vagrant_proxmox.errors.no_qemu_disk_size_specified_for_vm_type_qemu') unless @qemu_disk_size
-					end
+					errors << I18n.t('vagrant_proxmox.errors.no_qemu_os_specified_for_vm_type_qemu') unless @qemu_os
+					errors << I18n.t('vagrant_proxmox.errors.no_qemu_iso_or_qemu_iso_file_specified_for_vm_type_qemu') unless @qemu_iso || @qemu_iso_file
+					errors << I18n.t('vagrant_proxmox.errors.no_qemu_disk_size_specified_for_vm_type_qemu') unless @qemu_disk_size
 				end
 				{'Proxmox Provider' => errors}
 			end
