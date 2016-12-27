@@ -73,7 +73,7 @@ post for instructions.
  
 ## Create a Vagrantfile and Provision
 
-1. On your local workstation, create a `Vagrantfile`. Simply change:
+On your local workstation, create a `Vagrantfile`. Simply change:
 
    * `config.ssh.private_key_path` - This should point to the private key on your local workstation that was created earlier.  
    * `proxmox.endpoint` - This should be updated with the IP or hostname of your Proxmox server.
@@ -87,8 +87,8 @@ Vagrant.configure('2') do |config|
 
     config.vm.provider :proxmox do |proxmox|
         # Useful for debugging unencrypted request/response with stunnel+Wireshark
-        proxmox.endpoint = 'http://localhost:8006/api2/json'
-        #proxmox.endpoint = 'https://192.168.5.110:8006/api2/json'
+        #proxmox.endpoint = 'http://localhost:8006/api2/json'
+        proxmox.endpoint = 'https://192.168.5.110:8006/api2/json'
         proxmox.user_name = 'vagrant@pve'
         proxmox.password = 'vagrant'
         proxmox.vm_id_range = 900..910
@@ -109,7 +109,7 @@ end
 
 ```
 
-2. Provision a VM.
+Provision a VM.
 
         $ vagrant up --provider=proxmox 
 
