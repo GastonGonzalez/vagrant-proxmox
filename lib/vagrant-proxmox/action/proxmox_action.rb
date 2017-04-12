@@ -29,6 +29,11 @@ module VagrantPlugins
                     env[:machine].config.vm.networks.select { |type, _| type == :public_network }.first[1][:gw] rescue nil
                 end
 
+                protected
+                def get_cidr_block env
+                    env[:machine].config.vm.networks.select { |type, _| type == :public_network }.first[1][:cidr_block] rescue nil
+                end
+
 				protected
 				def get_machine_macaddress env
 					env[:machine].config.vm.networks.select { |type, _| type == :public_network }.first[1][:macaddress] rescue nil

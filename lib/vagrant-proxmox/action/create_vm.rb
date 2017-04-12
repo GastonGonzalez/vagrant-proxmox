@@ -74,7 +74,7 @@ module VagrantPlugins
 					 memory: config.vm_memory,
 					 description: "#{config.vm_name_prefix}#{env[:machine].name}"}
 					.tap do |params|
-						params[:net0] = "name=#{get_machine_interface_name(env)},ip=#{get_machine_ip_address(env)}/24,gw=#{get_machine_gw_ip(env)},bridge=#{get_machine_bridge_name(env)}" if get_machine_ip_address(env)
+						params[:net0] = "name=#{get_machine_interface_name(env)},ip=#{get_machine_ip_address(env)}#{get_cidr_block(env)},gw=#{get_machine_gw_ip(env)},bridge=#{get_machine_bridge_name(env)}" if get_machine_ip_address(env)
 					end
 				end
 			end
