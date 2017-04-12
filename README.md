@@ -77,7 +77,7 @@ On your local workstation, create a `Vagrantfile`. Simply change:
 
    * `config.ssh.private_key_path` - This should point to the private key on your local workstation that was created earlier.  
    * `proxmox.endpoint` - This should be updated with the IP or hostname of your Proxmox server.
-   * `box.vm.network`
+   * `box.vm.network` - The `cidr_block` is required. Most users will likely use '/24' if they are using 255.255.255.0 netmask.
 
 ```
 Vagrant.configure('2') do |config|
@@ -102,7 +102,7 @@ Vagrant.configure('2') do |config|
 
     config.vm.define :box, primary: true do |box|
         box.vm.box = 'dummy'
-        box.vm.network :public_network, ip: '192.168.5.112', interface: 'eth0', bridge: 'vmbr0', gw: '192.168.5.1'
+        box.vm.network :public_network, ip: '192.168.5.112', cidr_block: '/24', interface: 'eth0', bridge: 'vmbr0', gw: '192.168.5.1'
     end
 
 end
