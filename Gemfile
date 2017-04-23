@@ -9,4 +9,6 @@ group :development do
 	gem "vagrant", '1.4.3',
 	    :git => 'https://github.com/mitchellh/vagrant.git',
 	    :ref => 'v1.4.3'
+
+	gem 'rake','12.0.0'
 end

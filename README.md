@@ -20,7 +20,7 @@ has the following goals:
 ## Requirements
 
 * Vagrant 1.8+
-* Ruby 2.3+
+* Ruby 2.4.1
 * Promox 4.4 
 
 ## Building and Installing the Plugin (OS X)
@@ -28,30 +28,53 @@ has the following goals:
 The author's local development environment is an OS X workstation. If you are on OS X, ensure that you have 
 [Homebrew](http://brew.sh/) installed.
 
-1. Upgrade Ruby to the latest 2.x version.
+1. Install `rbenv` so that you can manage multiple versions of Ruby.
 
-        $ brew install ruby
+        $ brew update
+        $ brew install rbenv
 
-2. Open a new terminal and ensure that Ruby has been updated to the latest version.
+2. Add the rbenv shim to your PATH. It’s recommended that you add it to your Bash profile (~/.bash_profile).
 
-        $ ruby --version
-        ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-darwin15]
+        PATH=$PATH:~/.rbenv/shims
+        export PATH
 
-3. Clone this project and build the plugin.
+3. Source ~/.bash_profile to pick up your updated PATH.
+
+        $ . ~/.bash_profile
+
+
+4. Install Ruby 2.4.1 and add all the shims.
+
+        $ rbenv install 2.4.1
+        $ rbenv rehash
+
+5. Ensure that the current active version is set to 2.4.1.
+
+        $ rbenv versions
+        * system (set by /Users/gaston/.rbenv/version)
+        2.4.1
+
+6. Verify that rbenv is actually using Ruby to 2.4.1.
+
+        $ ruby -v
+        ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-darwin15]
+
+7. Clone this project and build the plugin.
 
         $ git clone https://github.com/GastonGonzalez/vagrant-proxmox.git
         $ cd vagrant-proxmox
+        $ rbenv local 2.4.1
         $ gem install bundler
         $ bundle install
         $ rake build
 
-4. Uninstall the `vagrant-proxmox` plugin if exists and install the plugin locally.
+8. Uninstall the `vagrant-proxmox` plugin if exists and install the plugin locally.
 
         $ vagrant plugin uninstall vagrant-proxmox
         $ vagrant plugin install pkg/vagrant-proxmox-0.0.10.gem
         $ vagrant plugin list
 
-5. Add the dummy Vagrant box for this provider.
+9. Add the dummy Vagrant box for this provider.
    
         $ vagrant box add dummy dummy_box/dummy.box
 
