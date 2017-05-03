@@ -19,8 +19,8 @@ has the following goals:
 
 ## Requirements
 
-* Vagrant 1.8+
-* Ruby 2.4.1
+* Vagrant 1.9.4+
+* Ruby 2.2.3
 * Promox 4.4 
 
 ## Building and Installing the Plugin (OS X)
@@ -43,27 +43,26 @@ The author's local development environment is an OS X workstation. If you are on
         $ . ~/.bash_profile
 
 
-4. Install Ruby 2.4.1 and add all the shims.
+4. Install Ruby 2.2.3 and add all the shims.
 
-        $ rbenv install 2.4.1
+        $ rbenv install 2.2.3
         $ rbenv rehash
 
-5. Ensure that the current active version is set to 2.4.1.
+5. Ensure that the current active version is set to 2.2.3.
 
         $ rbenv versions
         * system (set by /Users/gaston/.rbenv/version)
-        2.4.1
+        2.2.3
 
-6. Verify that rbenv is actually using Ruby to 2.4.1.
+6. Verify that rbenv is actually using Ruby to 2.2.3.
 
         $ ruby -v
-        ruby 2.4.1p111 (2017-03-22 revision 58053) [x86_64-darwin15]
 
 7. Clone this project and build the plugin.
 
         $ git clone https://github.com/GastonGonzalez/vagrant-proxmox.git
         $ cd vagrant-proxmox
-        $ rbenv local 2.4.1
+        $ rbenv local 2.2.3
         $ gem install bundler
         $ bundle install
         $ rake build

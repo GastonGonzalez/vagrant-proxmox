@@ -1,0 +1,12 @@
+ISSUE #1
+
+Unable to communicate with proxmox server:
+
+SSL_connect returned=1 errno=0 state=error: certificate verify failed
+
+This error occurs when connecting to a Proxmox server that uses a self-signed certificate.
+The latest version of the rest-client now checks for a valid certificate. I tried adding
+the Proxmox self-signed CA certificate to my system's trust; however, it does not work
+with the rest-client, it does, however, work for browsers. My solution was to use stunnel
+to connect estable a local HTTP tunnel to Proxmox, then update my Vagrantfile to connect
+to my local HTTP tunnel.
