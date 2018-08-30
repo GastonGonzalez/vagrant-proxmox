@@ -55,7 +55,7 @@ module VagrantPlugins
 					{vmid: vm_id,
 					 ostemplate: config.lxc_os_template,
 					 hostname: env[:machine].config.vm.hostname || env[:machine].name.to_s,
-					 password: 'vagrant',
+					 password: "#{config.vm_root_password}",
 					 rootfs: "#{config.vm_storage}:#{config.vm_disk_size}",
 					 memory: config.vm_memory,
 					 description: "#{config.vm_name_prefix}#{env[:machine].name}"}

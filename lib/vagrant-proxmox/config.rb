@@ -41,6 +41,11 @@ module VagrantPlugins
 			#
 			# @return [Boolean]
 			attr_accessor :replace_lxc_template_file
+			
+			# The virtual machine root password
+			#
+			# @return [Symbol]
+			attr_accessor :vm_root_password
 
 			# The id range to use for the virtual machines
 			#
@@ -155,6 +160,7 @@ module VagrantPlugins
 				@lxc_os_template = UNSET_VALUE
 				@lxc_template_file = UNSET_VALUE
 				@replace_lxc_template_file = false
+				@vm_root_password = 'vagrant'
 				@vm_id_range = 900..999
 				@vm_name_prefix = 'vagrant_'
 				@vm_memory = 512
@@ -187,6 +193,7 @@ module VagrantPlugins
 				@lxc_template_file = nil if @lxc_template_file == UNSET_VALUE
 				@lxc_os_template = "local:vztmpl/#{File.basename @lxc_template_file}" if @lxc_template_file
 				@lxc_os_template = nil if @lxc_os_template == UNSET_VALUE
+				@vm_root_password = nil if @vm_root_password == UNSET_VALUE
 				@qemu_os = nil if @qemu_os == UNSET_VALUE
 				@qemu_iso_file = nil if @qemu_iso_file == UNSET_VALUE
 				@qemu_iso = "local:iso/#{File.basename @qemu_iso_file}" if @qemu_iso_file
