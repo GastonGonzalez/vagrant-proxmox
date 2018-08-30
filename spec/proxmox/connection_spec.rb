@@ -151,30 +151,6 @@ module VagrantPlugins::Proxmox
 															 and_return({data: {status: status}}.to_json)
 			end
 
-			context 'when the machine is an openvz container' do
-
-				let(:vm_type) { 'openvz' }
-
-				it 'should request a machine state' do
-					expect(RestClient).to receive(:get).with("#{api_url}/nodes/localhost/openvz/100/status/current", anything)
-					connection.get_vm_state(100)
-				end
-
-				context 'when the machine is stopped' do
-					let(:status) { :stopped }
-					it 'should return :stopped' do
-						expect(connection.get_vm_state(100)).to eq(:stopped)
-					end
-				end
-
-				context 'when the machine is running' do
-					let(:status) { :running }
-					it 'should return :running' do
-						expect(connection.get_vm_state(100)).to eq(:running)
-					end
-				end
-			end
-
 			context 'when the machine is a qemu emulation' do
 
 				let(:vm_type) { 'qemu' }
@@ -330,25 +306,6 @@ module VagrantPlugins::Proxmox
 				allow(connection).to receive_messages :get_vm_info => vm_info
 			end
 
-			context 'when the machine is an openvz container' do
-
-				let(:vm_type) { 'openvz' }
-
-				it 'should call delete with the node and vm as parameter' do
-					expect(connection).to receive(:delete).with("/nodes/localhost/openvz/100")
-					connection.delete_vm 100
-				end
-
-				it 'waits for completion of the server task' do
-					expect(connection).to receive(:wait_for_completion)
-					connection.delete_vm 100
-				end
-
-				it 'should return the task exit status' do
-					expect(connection.delete_vm(100)).to eq('OK')
-				end
-			end
-
 			context 'when the machine is a qemu emulation' do
 
 				let(:vm_type) { 'qemu' }
@@ -375,7 +332,7 @@ module VagrantPlugins::Proxmox
 				allow(RestClient).to receive(:get).with("#{api_url}/cluster/resources?type=vm", anything).
 															 and_return({data: vm_list}.to_json)
 			end
-			let(:vm_list) { [{node: 'node', id: 'openvz/100'}, {node: 'anothernode', id: 'qemu/101'}] }
+			let(:vm_list) { [{node: 'anothernode', id: 'qemu/101'}] }
 
 			it 'should return the correct vm_information' do
 				expect(connection.send(:get_vm_info, 101)).to eq({id: 101, node: 'anothernode', type: 'qemu'})
@@ -394,15 +351,11 @@ module VagrantPlugins::Proxmox
 
 			before { allow(RestClient).to receive_messages delete: {data: {}}.to_json }
 
-			it 'should send a post request that deletes the openvz container' do
-				expect(RestClient).to receive(:delete).with("#{api_url}/nodes/localhost/openvz/100", anything)
-				connection.send :delete, "/nodes/localhost/openvz/100"
-			end
 		end
 
 		describe '#get_free_vm_id' do
 
-			it 'should query the proxmox server for all qemu and openvz machines' do
+			it 'should query the proxmox server for all qemu machines' do
 				expect(RestClient).to receive(:get).with("#{api_url}/cluster/resources?type=vm", anything).and_return({data: []}.to_json)
 				connection.get_free_vm_id
 			end
@@ -441,19 +394,6 @@ module VagrantPlugins::Proxmox
 				allow(connection).to receive_messages :wait_for_completion => 'OK'
 			end
 
-			it 'should call post with the correct parameters' do
-				expect(connection).to receive(:post).with('/nodes/localhost/openvz', 'params')
-				connection.create_vm node: 'localhost', vm_type: 'openvz', params: 'params'
-			end
-
-			it 'waits for completion of the server task' do
-				expect(connection).to receive(:wait_for_completion)
-				connection.create_vm node: 'localhost', vm_type: 'openvz', params: params
-			end
-
-			it 'should return the task exit status' do
-				expect(connection.create_vm(node: 'localhost', vm_type: 'openvz', params: 'params')).to eq('OK')
-			end
 		end
 
 		describe '#post' do
@@ -512,16 +452,6 @@ module VagrantPlugins::Proxmox
 				expect(connection.start_vm('100')).to eq('OK')
 			end
 
-			context 'when the machine is an openvz container' do
-
-				let(:vm_type) { 'openvz' }
-
-				it 'should call post with the correct parameters' do
-					expect(connection).to receive(:post).with("/nodes/localhost/openvz/100/status/start", nil)
-					connection.start_vm '100'
-				end
-			end
-
 			context 'when the machine is a qemu emulation' do
 
 				let(:vm_type) { 'qemu' }
@@ -548,16 +478,6 @@ module VagrantPlugins::Proxmox
 
 			it 'should return the task exit status' do
 				expect(connection.stop_vm('100')).to eq('OK')
-			end
-
-			context 'when the machine is an openvz container' do
-
-				let(:vm_type) { 'openvz' }
-
-				it 'should call post with the correct parameters' do
-					expect(connection).to receive(:post).with("/nodes/localhost/openvz/100/status/stop", nil)
-					connection.stop_vm '100'
-				end
 			end
 
 			context 'when the machine is a qemu emulation' do
@@ -588,16 +508,6 @@ module VagrantPlugins::Proxmox
 				expect(connection.shutdown_vm('100')).to eq('OK')
 			end
 
-			context 'when the machine is an openvz container' do
-
-				let(:vm_type) { 'openvz' }
-
-				it 'should call post with the correct parameters' do
-					expect(connection).to receive(:post).with("/nodes/localhost/openvz/100/status/shutdown", nil)
-					connection.shutdown_vm '100'
-				end
-			end
-
 			context 'when the machine is a qemu emulation' do
 
 				let(:vm_type) { 'qemu' }
@@ -611,7 +521,7 @@ module VagrantPlugins::Proxmox
 		describe '#upload_file' do
 
 			let (:file) { '/my/dir/template.tar.gz' }
-			let (:replace_openvz_template_file) { false }
+			let (:replace_lxc_template_file) { false }
 			let (:storage_file_list) { [] }
 
 			before do
@@ -651,7 +561,7 @@ module VagrantPlugins::Proxmox
 
 				context 'when the file is set to be replaced' do
 
-					let (:replace_openvz_template_file) { true }
+					let (:replace_lxc_template_file) { true }
 
 					it 'should delete the file before upload' do
 						expect(connection).to receive(:delete_file).with(filename: file, content_type: 'vztmpl', node: 'localhost', storage: 'local')
@@ -664,7 +574,7 @@ module VagrantPlugins::Proxmox
 		describe '#delete_file' do
 
 			let (:file) { '/my/dir/template.tar.gz' }
-			let (:replace_openvz_template_file) { true }
+			let (:replace_lxc_template_file) { true }
 			let (:storage_file_list) { [] }
 
 			before do

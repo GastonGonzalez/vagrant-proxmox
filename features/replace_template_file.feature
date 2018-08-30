@@ -10,9 +10,9 @@ Feature: Use new template file
           proxmox.endpoint = 'https://proxmox.example.com/api2/json'
           proxmox.user_name = 'vagrant'
           proxmox.password = 'password'
-          proxmox.vm_type = :openvz
-          proxmox.openvz_template_file = './tmp/mytemplate.tar.gz'
-          proxmox.replace_openvz_template_file = true
+          proxmox.vm_type = :lxc
+          proxmox.lxc_template_file = './tmp/mytemplate.tar.gz'
+          proxmox.replace_lxc_template_file = true
 	      end
         config.vm.define :machine, primary: true do |machine|
           machine.vm.box = 'b681e2bc-617b-4b35-94fa-edc92e1071b8'

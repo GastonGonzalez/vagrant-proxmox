@@ -13,8 +13,8 @@ module VagrantPlugins
 				def call env
 					env[:result] = :ok
 					config = env[:machine].provider_config
-					if config.openvz_template_file
-						env[:result] = upload_file env, config.openvz_template_file, config.replace_openvz_template_file
+					if config.lxc_template_file
+						env[:result] = upload_file env, config.lxc_template_file, config.replace_lxc_template_file
 					end
 					next_action env
 				end

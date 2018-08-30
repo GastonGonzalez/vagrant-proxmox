@@ -34,19 +34,7 @@ module VagrantPlugins
 							b1.use GetNodeList
 							b1.use SelectNode
 							b1.use Provision
-							if env1[:machine].provider_config.vm_type == :openvz
-								b1.use Call, UploadTemplateFile do |env2, b2|
-									if env2[:result] == :ok
-										b2.use CreateVm
-										b2.use StartVm
-										b2.use SyncFolders
-									elsif env2[:result] == :file_not_found
-										b2.use MessageFileNotFound
-									elsif env2[:result] == :server_upload_error
-										b2.use MessageUploadServerError
-									end
-								end
-							elsif env1[:machine].provider_config.vm_type == :lxc
+							if env1[:machine].provider_config.vm_type == :lxc
 								b1.use Call, UploadTemplateFile do |env2, b2|
 									if env2[:result] == :ok
 										b2.use CreateVm

@@ -20,7 +20,6 @@ module VagrantPlugins
 
 					begin
 						vm_id = connection(env).get_free_vm_id
-						params = create_params_openvz(config, env, vm_id) if config.vm_type == :openvz
 						params = create_params_lxc(config, env, vm_id) if config.vm_type == :lxc
 						params = create_params_qemu(config, env, vm_id) if config.vm_type == :qemu
 						exit_status = connection(env).create_vm node: node, vm_type: config.vm_type, params: params
@@ -50,24 +49,11 @@ module VagrantPlugins
 					 net0: network,
 					 description: "#{config.vm_name_prefix}#{env[:machine].name}"}
 				end
-
-				private
-				def create_params_openvz(config, env, vm_id)
-					{vmid: vm_id,
-					 ostemplate: config.openvz_os_template,
-					 hostname: env[:machine].config.vm.hostname || env[:machine].name.to_s,
-					 password: 'vagrant',
-					 memory: config.vm_memory,
-					 description: "#{config.vm_name_prefix}#{env[:machine].name}"}
-					.tap do |params|
-						params[:ip_address] = get_machine_ip_address(env) if get_machine_ip_address(env)
-					end
-				end
                 
                 private
 				def create_params_lxc(config, env, vm_id)
 					{vmid: vm_id,
-					 ostemplate: config.openvz_os_template,
+					 ostemplate: config.lxc_os_template,
 					 hostname: env[:machine].config.vm.hostname || env[:machine].name.to_s,
 					 password: 'vagrant',
 					 rootfs: "#{config.vm_storage}:#{config.vm_disk_size}",

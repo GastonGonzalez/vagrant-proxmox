@@ -8,7 +8,7 @@ module VagrantPlugins::Proxmox
 		let(:connection) { Connection.new 'https://your.proxmox.server/api2/json' }
 		let(:env) { {machine: environment.machine(environment.primary_machine_name, :proxmox)} }
 		let(:ui) { double('ui').as_null_object }
-		let(:proxmox_vm_type) { :openvz }
+		let(:proxmox_vm_type) { :lxc }
 		let(:qemu_os) { :l26 }
 		let(:qemu_iso) { 'someiso.iso' }
 		let(:qemu_disk_size) { '30G' }
@@ -18,7 +18,7 @@ module VagrantPlugins::Proxmox
 			env[:machine].provider_config.vm_type = proxmox_vm_type
 		end
 
-		context 'the vm_type is :openvz' do
+		context 'the vm_type is :lxc' do
 
 			context 'the vm is not yet created' do
 				it 'should call the appropriate actions and print a ui message that the vm will be created' do

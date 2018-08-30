@@ -22,25 +22,25 @@ module VagrantPlugins
 			# @return [String]
 			attr_accessor :password
 
-			# The virtual machine type, e.g. :openvz or :qemu or :lxc
+			# The virtual machine type, e.g. :qemu or :lxc
 			#
 			# @return [Symbol]
 			attr_accessor :vm_type
 
-			# The openvz os template to use for the virtual machine
+			# The lxc os template to use for the virtual machine
 			#
 			# @return [String]
-			attr_accessor :openvz_os_template
+			attr_accessor :lxc_os_template
 
-			# The openvz os template file to upload and use for the virtual machine
+			# The lxc os template file to upload and use for the virtual machine
 			#
 			# @return [String]
-			attr_accessor :openvz_template_file
+			attr_accessor :lxc_template_file
 
-			# Should the openvz os template be replaced (deleted before upload)?
+			# Should the lxc os template be replaced (deleted before upload)?
 			#
 			# @return [Boolean]
-			attr_accessor :replace_openvz_template_file
+			attr_accessor :replace_lxc_template_file
 
 			# The id range to use for the virtual machines
 			#
@@ -152,9 +152,9 @@ module VagrantPlugins
 				@user_name = UNSET_VALUE
 				@password = UNSET_VALUE
 				@vm_type = UNSET_VALUE
-				@openvz_os_template = UNSET_VALUE
-				@openvz_template_file = UNSET_VALUE
-				@replace_openvz_template_file = false
+				@lxc_os_template = UNSET_VALUE
+				@lxc_template_file = UNSET_VALUE
+				@replace_lxc_template_file = false
 				@vm_id_range = 900..999
 				@vm_name_prefix = 'vagrant_'
 				@vm_memory = 512
@@ -184,9 +184,9 @@ module VagrantPlugins
 				@user_name = nil if @user_name == UNSET_VALUE
 				@password = nil if @password == UNSET_VALUE
 				@vm_type = nil if @vm_type == UNSET_VALUE
-				@openvz_template_file = nil if @openvz_template_file == UNSET_VALUE
-				@openvz_os_template = "local:vztmpl/#{File.basename @openvz_template_file}" if @openvz_template_file
-				@openvz_os_template = nil if @openvz_os_template == UNSET_VALUE
+				@lxc_template_file = nil if @lxc_template_file == UNSET_VALUE
+				@lxc_os_template = "local:vztmpl/#{File.basename @lxc_template_file}" if @lxc_template_file
+				@lxc_os_template = nil if @lxc_os_template == UNSET_VALUE
 				@qemu_os = nil if @qemu_os == UNSET_VALUE
 				@qemu_iso_file = nil if @qemu_iso_file == UNSET_VALUE
 				@qemu_iso = "local:iso/#{File.basename @qemu_iso_file}" if @qemu_iso_file
@@ -202,8 +202,8 @@ module VagrantPlugins
 				errors << I18n.t('vagrant_proxmox.errors.no_user_name_specified') unless @user_name
 				errors << I18n.t('vagrant_proxmox.errors.no_password_specified') unless @password
 				errors << I18n.t('vagrant_proxmox.errors.no_vm_type_specified') unless @vm_type
-				if @vm_type == :openvz
-					errors << I18n.t('vagrant_proxmox.errors.no_openvz_os_template_or_openvz_template_file_specified_for_type_openvz') unless @openvz_os_template || @openvz_template_file
+				if @vm_type == :lxc
+					errors << I18n.t('vagrant_proxmox.errors.no_lxc_os_template_or_lxc_template_file_specified_for_type_lxc') unless @lxc_os_template || @lxc_template_file
 				end
 				if @vm_type == :qemu
 					errors << I18n.t('vagrant_proxmox.errors.no_qemu_os_specified_for_vm_type_qemu') unless @qemu_os
