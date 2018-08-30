@@ -32,6 +32,7 @@ module VagrantPlugins::Proxmox
 			end
 
 			it 'should rsync the directory with the vm' do
+			# TODO Should instaed use the resync plugin
 				expect(Vagrant::Util::Subprocess).to receive(:execute).with(
 																								 'rsync', '--verbose', '--archive', '--compress', '--delete',
 																								 '-e', "ssh -p 22 -i 'key' -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null",

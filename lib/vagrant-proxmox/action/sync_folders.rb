@@ -5,6 +5,8 @@ module VagrantPlugins
 		module Action
 
 			# This action uses 'rsync' to sync the folders over to the virtual machine.
+			# TODO replace this by using SyncFolder plugin
+			
 			class SyncFolders < ProxmoxAction
 
 				def initialize app, env
@@ -20,9 +22,16 @@ module VagrantPlugins
 						guestpath = data[:guestpath]
 						next if data[:disabled]
 
-						# Make sure there is a trailing slash on the host path to
-						# avoid creating an additional directory with rsync
-						hostpath = "#{hostpath}/" if hostpath !~ /\/$/
+						if Vagrant::Util::Platform.windows?
+						  # rsync for Windows expects cygwin style paths, always.
+						  hostpath = Vagrant::Util::Platform.cygwin_path(hostpath)
+						end
+
+						# Make sure the host path ends with a "/" to avoid creating
+						# a nested directory...
+						if !hostpath.end_with?("/")
+						  hostpath += "/"
+						end
 
 						env[:ui].info I18n.t('vagrant_proxmox.rsync_folder', hostpath: hostpath, guestpath: guestpath)
 
@@ -38,7 +47,7 @@ module VagrantPlugins
 
 						rsync_process = Vagrant::Util::Subprocess.execute *command
 						if rsync_process.exit_code != 0
-							raise Errors::RsyncError, guestpath: guestpath, hostpath: hostpath, stderr: rsync_process.stderr
+							raise Errors::RsyncError, guestpath: guestpath, hostpath: hostpath, stderr: command.join(" ") + " \n" +rsync_process.stderr
 						end
 					end
 
