@@ -59,8 +59,18 @@ module VagrantPlugins
 					 rootfs: "#{config.vm_storage}:#{config.vm_disk_size}",
 					 memory: config.vm_memory,
 					 description: "#{config.vm_name_prefix}#{env[:machine].name}"}
-					.tap do |params|
-						params[:net0] = "name=#{get_machine_interface_name(env)},ip=#{get_machine_ip_address(env)}#{get_cidr_block(env)},gw=#{get_machine_gw_ip(env)},bridge=#{get_machine_bridge_name(env)}" if get_machine_ip_address(env)
+					.tap do |params|					
+						net_num = 0
+						env[:machine].config.vm.networks.each do |type, options|
+						next if not type.match(/^p.*_network$/)
+							nic = "name=#{options[:interface]}"
+							nic += ",ip=#{options[:ip]}#{options[:cidr_block]}" if options[:ip] && options[:cidr_block]
+							nic += ",gw=#{options[:gw]}" if options[:gw]
+							nic += ",bridge=#{options[:bridge]}" if options[:bridge]
+							net = 'net' + net_num.to_s
+							params[net] = nic
+							net_num += 1
+						end		
 					end
 				end
 			end
