@@ -9,7 +9,6 @@ module VagrantPlugins
 				end
 
  				def call env
-					#TODO add file name
 					env[:ui].info I18n.t('vagrant_proxmox.errors.file_not_found')
 					next_action env
 				end

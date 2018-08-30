@@ -6,7 +6,6 @@ require 'required_parameters'
 module VagrantPlugins
 	module Proxmox
 		class Connection
-
 			include RequiredParameters
 
 			attr_reader :api_url
@@ -71,7 +70,7 @@ module VagrantPlugins
 						exit_status.nil? ? raise(VagrantPlugins::Proxmox::ProxmoxTaskNotFinished) : exit_status
 					end
 				rescue VagrantPlugins::Proxmox::ProxmoxTaskNotFinished
-					raise VagrantPlugins::Proxmox::Errors::Timeout.new timeout_message
+					raise VagrantPlugins::Proxmox::Errors::Timeout, timeout_message
 				end
 			end
 
@@ -133,7 +132,7 @@ module VagrantPlugins
 			end
 
 			def get_free_vm_id
-                                # to avoid collisions in multi-vm setups
+				# to avoid collisions in multi-vm setups
 				sleep (rand(1..3) + 0.1 * rand(0..9))
 				response = get "/cluster/resources?type=vm"
 				allowed_vm_ids = vm_id_range.to_set
@@ -151,8 +150,7 @@ module VagrantPlugins
 			def upload_file file, content_type: required('content_type'), node: required('node'), storage: required('storage'), replace: false
 				delete_file(filename: file, content_type: content_type, node: node, storage: storage) if replace
 				unless is_file_in_storage? filename: file, node: node, storage: storage
-					res = post "/nodes/#{node}/storage/#{storage}/upload", content: content_type,
-										 filename: File.new(file, 'rb'), node: node, storage: storage
+					res = post "/nodes/#{node}/storage/#{storage}/upload", content: content_type, filename: File.new(file, 'rb'), node: node, storage: storage
 					wait_for_completion task_response: res, timeout_message: 'vagrant_proxmox.errors.upload_timeout'
 				end
 			end
@@ -178,7 +176,9 @@ module VagrantPlugins
 			# This is called every time to retrieve the node and vm_type, hence on large
 			# installations this could be a huge amount of data. Probably an optimization
 			# with a buffer for the machine info could be considered.
+
 			private
+
 			def get_vm_info vm_id
 				response = get '/cluster/resources?type=vm'
 				response[:data]
@@ -188,6 +188,7 @@ module VagrantPlugins
 			end
 
 			private
+
 			def get_task_exitstatus task_upid
 				node = /UPID:(.*?):/.match(task_upid)[1]
 				response = get "/nodes/#{node}/tasks/#{task_upid}/status"
@@ -195,6 +196,7 @@ module VagrantPlugins
 			end
 
 			private
+
 			def get path
 				begin
 					response = RestClient.get "#{api_url}#{path}", {cookies: {PVEAuthCookie: ticket}}
@@ -211,6 +213,7 @@ module VagrantPlugins
 			end
 
 			private
+
 			def delete path, params = {}
 				begin
 					response = RestClient.delete "#{api_url}#{path}", headers
@@ -227,6 +230,7 @@ module VagrantPlugins
 			end
 
 			private
+
 			def post path, params = {}
 				begin
 					response = RestClient.post "#{api_url}#{path}", params, headers
@@ -243,11 +247,13 @@ module VagrantPlugins
 			end
 
 			private
+
 			def headers
 				ticket.nil? ? {} : {CSRFPreventionToken: csrf_token, cookies: {PVEAuthCookie: ticket}}
 			end
 
 			private
+
 			def is_file_in_storage? filename: required('filename'), node: required('node'), storage: required('storage')
 				(list_storage_files node: node, storage: storage).find { |f| f =~ /#{File.basename filename}/ }
 			end

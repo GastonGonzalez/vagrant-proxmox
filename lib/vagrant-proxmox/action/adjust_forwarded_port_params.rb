@@ -28,9 +28,9 @@ module VagrantPlugins
 								options[:auto_correct] = false
 								options[:host_ip] = node_ip
 								options[:host] = sprintf("22%03d", vm_id.to_i).to_i
-                                                                # Use the IP defined in the Vagrantfile by: box.vm.network :public_network, ip: 'x.x.x.x'
+                                # Use the IP defined in the Vagrantfile by: box.vm.network :public_network, ip: 'x.x.x.x'
 								env[:machine].config.ssh.host = env[:machine].config.vm.networks.select { |type, _| type == :public_network }.first[1][:ip]
-                                                                # Allow config.ssh.port in Vargrantfile to define the port
+                                # Allow config.ssh.port in Vargrantfile to define the port
 								#env[:machine].config.ssh.port = sprintf("22%03d", vm_id.to_i).to_s
 								break
 							end
