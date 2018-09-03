@@ -9,7 +9,7 @@ module VagrantPlugins
 				end
 
 				def call env
-					FileUtils.rm_rf ".vagrant/machines/#{env[:machine].name}/proxmox"
+					FileUtils.rm_rf Dir.glob(".vagrant/machines/#{env[:machine].name}/proxmox/*")
 					next_action env
 				end
 

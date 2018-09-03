@@ -26,18 +26,18 @@ describe VagrantPlugins::Proxmox::Config do
 			it { is_expected.to be_nil }
 		end
 
-		describe '#openvz_os_template' do
-			subject { super().openvz_os_template }
+		describe '#lxc_os_template' do
+			subject { super().lxc_os_template }
 			it { is_expected.to be_nil }
 		end
 
-		describe '#openvz_template_file' do
-			subject { super().openvz_template_file }
+		describe '#lxc_template_file' do
+			subject { super().lxc_template_file }
 			it { is_expected.to be_nil }
 		end
 
-		describe '#replace_openvz_template_file' do
-			subject { super().replace_openvz_template_file }
+		describe '#replace_lxc_template_file' do
+			subject { super().replace_lxc_template_file }
 			it { is_expected.to eq(false) }
 		end
 
@@ -111,10 +111,10 @@ describe VagrantPlugins::Proxmox::Config do
 	describe 'of a given Vagrantfile' do
 
 		let(:proxmox_qemu_iso) { '' }
-		let(:proxmox_openvz_os_template) { "proxmox.openvz_os_template = 'local:vztmpl/template.tar.gz'" }
-		let(:proxmox_openvz_template_file) { '' }
-		let(:proxmox_replace_openvz_template_file) { '' }
-		let(:proxmox_vm_type) { 'proxmox.vm_type = :openvz' }
+		let(:proxmox_lxc_os_template) { "proxmox.lxc_os_template = 'local:vztmpl/template.tar.gz'" }
+		let(:proxmox_lxc_template_file) { '' }
+		let(:proxmox_replace_lxc_template_file) { '' }
+		let(:proxmox_vm_type) { 'proxmox.vm_type = :lxc' }
 		let(:proxmox_qemu_iso_file) { '' }
 		let(:proxmox_replace_qemu_iso_file) { '' }
 		let(:proxmox_qemu_disk_size) { '' }
@@ -125,9 +125,9 @@ Vagrant.configure('2') do |config|
 		proxmox.user_name = 'vagrant'
 		proxmox.password = 'password'
     #{proxmox_vm_type}
-		#{proxmox_openvz_os_template}
-		#{proxmox_openvz_template_file}
-		#{proxmox_replace_openvz_template_file}
+		#{proxmox_lxc_os_template}
+		#{proxmox_lxc_template_file}
+		#{proxmox_replace_lxc_template_file}
 		#{proxmox_qemu_iso}
 		#{proxmox_qemu_iso_file}
 		#{proxmox_replace_qemu_iso_file}
@@ -177,33 +177,33 @@ end
 			end
 
 			context 'with an existing template file' do
-				describe '#openvz_os_template' do
+				describe '#lxc_os_template' do
 					before do
 					end
-					subject { super().openvz_os_template }
+					subject { super().lxc_os_template }
 					it { is_expected.to eq('local:vztmpl/template.tar.gz') }
 				end
 			end
 
 			context 'with a new template file' do
-				let(:proxmox_openvz_os_template) { "" }
-				let(:proxmox_openvz_template_file) { "proxmox.openvz_template_file = 'template.tar.gz'" }
+				let(:proxmox_lxc_os_template) { "" }
+				let(:proxmox_lxc_template_file) { "proxmox.lxc_template_file = 'template.tar.gz'" }
 
-				describe '#openvz_template_file' do
+				describe '#lxc_template_file' do
 					before do
 					end
-					subject { super().openvz_template_file }
+					subject { super().lxc_template_file }
 					it { is_expected.to eq('template.tar.gz') }
 				end
 			end
 
 			context 'with a new template file to be overwritten' do
-				let(:proxmox_replace_openvz_template_file) { 'proxmox.replace_openvz_template_file = true' }
+				let(:proxmox_replace_lxc_template_file) { 'proxmox.replace_lxc_template_file = true' }
 
-				describe '#openvz_template_file' do
+				describe '#lxc_template_file' do
 					before do
 					end
-					subject { super().replace_openvz_template_file }
+					subject { super().replace_lxc_template_file }
 					it { is_expected.to eq(true) }
 				end
 			end
@@ -277,15 +277,15 @@ end
 					end
 				end
 
-				context 'with vm_type = :openvz' do
+				context 'with vm_type = :lxc' do
 
-					describe 'because of a missing openvz_os_template and missing openvz_template_file' do
+					describe 'because of a missing lxc_os_template and missing lxc_template_file' do
 						before do
-							subject.openvz_os_template = nil
-							subject.openvz_template_file = nil
+							subject.lxc_os_template = nil
+							subject.lxc_template_file = nil
 						end
 						specify 'it should report an error' do
-							expect(subject.validate(machine)).to eq({'Proxmox Provider' => ['No openvz_os_template or openvz_template_file specified for vm_type=:openvz']})
+							expect(subject.validate(machine)).to eq({'Proxmox Provider' => ['No lxc_os_template or lxc_template_file specified for vm_type=:lxc']})
 						end
 					end
 				end
@@ -333,15 +333,15 @@ end
 
 		describe 'is finalized' do
 
-			context 'with vm_type=:openvz' do
+			context 'with vm_type=:lxc' do
 
 				context 'a template file was specified' do
 
-					let(:proxmox_openvz_os_template) { '' }
-					let(:proxmox_openvz_template_file) { "proxmox.openvz_template_file = '/my/dir/mytemplate.tar.gz'" }
+					let(:proxmox_lxc_os_template) { '' }
+					let(:proxmox_lxc_template_file) { "proxmox.lxc_template_file = '/my/dir/mytemplate.tar.gz'" }
 
-					it 'should set the openvz_os_template to the uploaded template file' do
-						expect(config.openvz_os_template).to eq('local:vztmpl/mytemplate.tar.gz')
+					it 'should set the lxc_os_template to the uploaded template file' do
+						expect(config.lxc_os_template).to eq('local:vztmpl/mytemplate.tar.gz')
 					end
 				end
 
@@ -351,12 +351,12 @@ end
 
 				context 'an iso file was specified' do
 
-					let(:proxmox_openvz_os_template) { '' }
-					let(:proxmox_openvz_template_file) { '' }
+					let(:proxmox_lxc_os_template) { '' }
+					let(:proxmox_lxc_template_file) { '' }
 					let(:proxmox_qemu_iso) { '' }
 					let(:proxmox_qemu_iso_file) { "proxmox.qemu_iso_file = '/my/dir/myiso.iso'" }
 
-					it 'should set the openvz_os_template to the uploaded template file' do
+					it 'should set the lxc_os_template to the uploaded template file' do
 						expect(config.qemu_iso).to eq('local:iso/myiso.iso')
 					end
 				end

@@ -28,16 +28,16 @@ module VagrantPlugins::Proxmox
 
 			describe 'the call to create a new virtual machine' do
 
-				context 'when the vm_type is :openvz' do
+				context 'when the vm_type is :lxc' do
 
 					let(:vagrantfile) { 'dummy_box/Vagrantfile' }
-					before { allow(env[:machine].provider_config).to receive(:vm_type) { :openvz } }
+					before { allow(env[:machine].provider_config).to receive(:vm_type) { :lxc } }
 
 					context 'with default config' do
 						specify do
 							expect(connection).to receive(:create_vm).
 																			with(node: 'localhost',
-																					 vm_type: :openvz,
+																					 vm_type: :lxc,
 																					 params: {vmid: 100,
 																										hostname: 'machine',
 																										ostemplate: 'local:vztmpl/template.tar.gz',
@@ -53,7 +53,7 @@ module VagrantPlugins::Proxmox
 						specify do
 							expect(connection).to receive(:create_vm).
 																			with(node: 'localhost',
-																					 vm_type: :openvz,
+																					 vm_type: :lxc,
 																					 params: {vmid: 100,
 																										hostname: 'hostname',
 																										ostemplate: 'local:vztmpl/template.tar.gz',
@@ -69,7 +69,7 @@ module VagrantPlugins::Proxmox
 						specify do
 							expect(connection).to receive(:create_vm).
 																			with(node: 'localhost',
-																					 vm_type: :openvz,
+																					 vm_type: :lxc,
 																					 params: {vmid: 100,
 																										hostname: 'machine',
 																										ip_address: '127.0.0.1',

@@ -17,8 +17,8 @@ module VagrantPlugins::Proxmox
 		subject(:action) { described_class.new(-> (_) {}, environment) }
 
 		before do
-			env[:machine].provider_config.openvz_template_file = template_file
-			env[:machine].provider_config.replace_openvz_template_file = replace_template_file
+			env[:machine].provider_config.lxc_template_file = template_file
+			env[:machine].provider_config.replace_lxc_template_file = replace_template_file
 			allow(File).to receive(:exist?).with(template_file).and_return(template_file_exists)
 		end
 
